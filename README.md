@@ -1,2 +1,4 @@
 # cloud-developer
-content for Udacity's cloud developer nanodegree
+Solution for Udacity Cloud Developer ND - Project 2.
+
+Development branch: Development
