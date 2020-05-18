@@ -2,7 +2,7 @@
 Solution for Udacity Cloud Developer ND - Project 2.
 
 #### Stable branch: master
-#### Dev branch: development
+#### Development branch: dev
 
 URLs (working as of the commit time) 
 #### Frontend S3 Static Website: http://udacity-frontend-nikunj-dev.s3-website-us-east-1.amazonaws.com/index.html
