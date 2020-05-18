@@ -16,6 +16,9 @@ export const config = {
     "host": "",
     "dialect": "postgres"
   },
+  "ui": {
+    "cloudfront": process.env.CLOUDFRONT_URL
+  },
   "jwt":{
     "secret": process.env.UDACITY_SECRET
   }

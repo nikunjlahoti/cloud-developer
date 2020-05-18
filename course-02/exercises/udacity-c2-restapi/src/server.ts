@@ -6,6 +6,7 @@ import { IndexRouter } from './controllers/v0/index.router';
 import bodyParser from 'body-parser';
 
 import { V0MODELS } from './controllers/v0/model.index';
+import cors from 'cors';
 
 (async () => {
   await sequelize.addModels(V0MODELS);
@@ -16,13 +17,14 @@ import { V0MODELS } from './controllers/v0/model.index';
   
   app.use(bodyParser.json());
 
-  //CORS Should be restricted
+  //CORS should not be restricted to localhost alone, as we want to connect to this server from a different UI domain name.
   app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8100");
+    // res.header("Access-Control-Allow-Origin", "http://localhost:8100");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
   });
 
+  app.use(cors())
   app.use('/api/v0/', IndexRouter)
 
   // Root URI call
