@@ -13,7 +13,6 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   // Use the body parser middleware for post requests
   app.use(bodyParser.json());
 
-  // @TODO1 IMPLEMENT A RESTFUL ENDPOINT
   // GET /filteredimage?image_url={{URL}}
   // endpoint to filter an image from a public url.
   // IT SHOULD
@@ -26,10 +25,44 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
   //    image_url: URL of a publicly accessible image
   // RETURNS
   //   the filtered image file [!!TIP res.sendFile(filteredpath); might be useful]
+  app.get("/filteredimage", async ( req, res) => {
+    let {image_url} = req.query;
+    console.log(`Image URL sent: ` + image_url);
 
-  /**************************************************************************** */
+    if (!image_url) {
+      return res.status(400).send({ message: 'image_url is required' });
+    }
 
-  //! END @TODO1
+    let fileNamePromise = filterImageFromURL(image_url)
+    .then(downloadedFileName => {
+      console.log("Local file downloaded at " + downloadedFileName);
+      console.log("About to send the image in the response");
+      res.status(200).sendFile(downloadedFileName, error => {
+        if (error) {
+          console.log("Error occurred in sending the image", error)
+          // Regardless try to delete the image anyway.
+        }
+
+        console.log("Image sent. Moving on to delete the image now");
+        let filesToBeDeleted = [];
+        filesToBeDeleted.push(downloadedFileName);
+        deleteLocalFiles(filesToBeDeleted).finally(() => {
+          console.log("Inside Delete finally");
+        });
+        console.log("Deleted: " + filesToBeDeleted);
+      });
+    }, error => {
+      console.log("Issue in fetching the remote file")
+      return res.status(400).send({ message: 'Unable to get the remote file. Please check the fileURL or try again later.', error : error });
+    })
+    .finally(() => {
+      console.log("Inside finally");
+    });
+
+    await fileNamePromise;
+    console.log("At the end of the function");
+  });
+
   
   // Root Endpoint
   // Displays a simple message to the user
